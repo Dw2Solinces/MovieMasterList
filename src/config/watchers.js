@@ -1,0 +1,20 @@
+const { connection } = require('mongoose');
+
+const gracefulShutdown = async () => {
+  console.log('Cerrando conexión a MongoDB...');
+  await connection.close();
+  console.log('Conexión a MongoDB cerrada.');
+};
+
+const setUpMongoDBProcessWatchers = () => {
+  // cerrar conexion en process.exit()
+  process.on('exit', gracefulShutdown);
+
+  // cerrar conexion en comandos del CLI.
+  process.on('SIGTERM', gracefulShutdown);
+
+  // cerrar conexion en excepciones no controladas.
+  process.on('uncaughtException', gracefulShutdown);
+};
+
+module.exports = { gracefulShutdown, setUpMongoDBProcessWatchers }
