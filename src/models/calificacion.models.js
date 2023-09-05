@@ -10,9 +10,6 @@ const calificacionSchema = new Schema({
         type: String,
         require: [true, 'El id de la lista es obligatorio.']
     },
-    url: {
-        type: String
-    },
     calificacion: {
         type: Number,
         require: [true, 'Debe ingresar la calificacion.']

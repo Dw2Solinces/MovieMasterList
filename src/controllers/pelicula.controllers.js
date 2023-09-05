@@ -1,4 +1,5 @@
-const Pelicula = require("../models/pelicula.model");
+const Pelicula = require("../models/pelicula.models");
+const Joi = require("@hapi/joi");
 
 //Se define las validaciones para guardar la pelicula
 const schemaPelicula = Joi.object({
