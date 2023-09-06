@@ -1,5 +1,8 @@
 const ListaPelicula = require("../models/listaPelicula.models");
 const Calificacion = require("../models/calificacion.models");
+const Usuario = require("../models/usuario.models");
+const Pelicula = require("../models/pelicula.models");
+const ListaPeliculaAllDTO = require("../dtos/listPeliculaAll.dto");
 
 const Joi = require("@hapi/joi");
 
@@ -75,9 +78,16 @@ const getAllListaPelicula = async (req, res) => {
             ? sumOfCalificaciones / totalCalificaciones
             : 0;
 
-        lista.calificacionPromedio = averageRating;
+        const user = await Usuario.findOne({ _id: lista.usuarioID });
 
-        return lista;
+        const dataLista = new ListaPeliculaAllDTO({
+          id: lista.id,
+          nombre: lista.nombre,
+          nickname: user.nickname,
+          calificacion: averageRating,
+        });
+
+        return dataLista;
       })
     );
 
@@ -94,7 +104,7 @@ const listaPeliculaUsuario = async (req, res) => {
 
   const id = req.params.id;
   try {
-    const listaPeliculaDB = await ListaPelicula.findOne({ usuarioID: id });
+    const listaPeliculaDB = await ListaPelicula.findOne({ _id: id });
 
     const calificaiones = await Calificacion.find({
       usuarioID: listaPeliculaDB.usuarioID,
@@ -109,8 +119,22 @@ const listaPeliculaUsuario = async (req, res) => {
 
     listaPeliculaDB.calificacionPromedio = averageRating;
 
+    const user = await Usuario.findOne({ _id: listaPeliculaDB.usuarioID });
+
+    const peliculas = await Pelicula.find({ listaID: id });
+
+    console.log(peliculas);
+
+    const dataLista = new ListaPeliculaAllDTO({
+      id: listaPeliculaDB.id,
+      nombre: listaPeliculaDB.nombre,
+      nickname: user.nickname,
+      calificacion: averageRating,
+      peliculas: peliculas
+    });
+
     res.status(200).json({
-      data: listaPeliculaDB,
+      dataLista,
     });
   } catch (error) {
     console.log(error);

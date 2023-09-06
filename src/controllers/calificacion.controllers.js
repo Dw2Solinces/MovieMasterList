@@ -3,7 +3,6 @@ const Joi = require("@hapi/joi");
 
 //Se define las validaciones para guardar la pelicula
 const schemaCalificaicion = Joi.object({
-  usuarioID: Joi.string().required(),
   listaPeliculaID: Joi.string().required(),
   calificacion: Joi.string().required(),
 });
@@ -26,7 +25,6 @@ const calificarLista = async (req, res) => {
 
   // Se crea el objecto a guardar
   const calificacionSv = new Calificacion({
-    usuarioID: req.body.usuarioID,
     listaPeliculaID: req.body.listaPeliculaID,
     calificacion: req.body.calificacion,
   });
@@ -36,7 +34,7 @@ const calificarLista = async (req, res) => {
     await calificacionSv.save();
 
     //Se devuelve la respuesta
-    res.status(201).json({
+    res.status(200).json({
       data: "Calificacion guardada correctamente",
     });
   } catch (error) {

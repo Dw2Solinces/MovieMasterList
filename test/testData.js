@@ -36,12 +36,10 @@ const goodNewPelicula = {
 };
 
 const badNewCalificacion = {
-  usuarioID: "Kadel Lacatt",
   calificacion: "klacatt_004",
 };
 
 const goodNewCalificacion = {
-  usuarioID: "Kadel Lacatt",
   calificacion: "klacatt_004",
   listaID: "1981-09-25",
 };
