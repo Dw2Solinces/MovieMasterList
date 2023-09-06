@@ -6,6 +6,7 @@ const schemaPelicula = Joi.object({
   anio: Joi.string().required(),
   nombre: Joi.string().required(),
   listaID: Joi.string().required(),
+  url: Joi.string()
 });
 
 const getAllPeliculas = async (req, res) => {
@@ -59,25 +60,25 @@ const createPelicula = async (req, res) => {
       .status(400)
       .json({ error: "Has superado el número máximo de peliculas." });
 
-  // Se crea el objecto a guardar
-  const peliculaSv = new Pelicula({
-    anio: req.body.anio,
-    nombre: req.body.nombre,
-    url: req.body.url,
-    listaID: req.body.listaID,
-  });
-
   try {
+    // Se crea el objecto a guardar
+    const peliculaSv = new Pelicula({
+      anio: req.body.anio,
+      nombre: req.body.nombre,
+      url: req.body.url,
+      listaID: req.body.listaID,
+    });
+
     // Se guarda la información
     const peliculaUser = await peliculaSv.save();
 
     //Se devuelve la respuesta
-    res.status(201).json({
+    res.status(200).json({
       data: peliculaUser,
     });
   } catch (error) {
     console.log("error", error);
-    throw error;
+    res.status(400).json({ error });
   }
 };
 
@@ -90,10 +91,9 @@ const deletePelicula = async (req, res) => {
     }] */
 
   const id = req.params.id;
-  console.log("id desde backend", id);
+
   try {
     const peliculaDB = await Pelicula.findByIdAndDelete({ _id: id });
-    console.log(peliculaDB);
 
     if (!peliculaDB) {
       res.json({

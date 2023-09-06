@@ -41,7 +41,7 @@ const calificarLista = async (req, res) => {
     });
   } catch (error) {
     console.log("error", error);
-    throw error;
+    res.status(400).json({ error });
   }
 };
 
