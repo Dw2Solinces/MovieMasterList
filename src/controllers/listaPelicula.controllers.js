@@ -98,8 +98,6 @@ const listaPeliculaUsuario = async (req, res) => {
 
     const peliculas = await Pelicula.find({ listaID: id });
 
-    console.log(peliculas);
-
     const dataLista = new ListaPeliculaAllDTO({
       id: listaPeliculaDB.id,
       nombre: listaPeliculaDB.nombre,

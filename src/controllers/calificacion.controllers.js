@@ -53,8 +53,6 @@ const calificarLista = async (req, res) => {
       }
     );
 
-    console.log(objetoActualizado);
-
     //Se devuelve la respuesta
     res.status(200).json({
       data: "Calificacion guardada correctamente",
