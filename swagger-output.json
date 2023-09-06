@@ -1,0 +1,353 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "API My 100 Movie List",
+    "description": "Documentación para la gestión de <b>My 100 Movie List<b>"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3001/"
+    },
+    {
+      "url": "https://localhost:3001/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Usuario",
+      "description": "Gestion de login y registro de usuario"
+    },
+    {
+      "name": "ListaPelicula",
+      "description": "Gestion de las listas de las peliculas del usuario"
+    },
+    {
+      "name": "Pelicula",
+      "description": "Gestion de guardar y eliminar peliculas"
+    },
+    {
+      "name": "Calificacion",
+      "description": "Gestion de las calificaciones de las peliculas"
+    }
+  ],
+  "paths": {
+    "/pelicula/": {
+      "get": {
+        "tags": [
+          "Pelicula"
+        ],
+        "description": "Endpoint para obtener todas las peliculas",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Pelicula"
+        ],
+        "description": "Endpoint para guardar pelicula",
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nombre": {
+                    "example": "any"
+                  },
+                  "lanzamiento": {
+                    "example": "any"
+                  },
+                  "url": {
+                    "example": "any"
+                  },
+                  "listaID": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pelicula/{id}": {
+      "delete": {
+        "tags": [
+          "Pelicula"
+        ],
+        "description": "Endpoint para eliminar pelicula",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/registroUsuario": {
+      "post": {
+        "tags": [
+          "Usuario"
+        ],
+        "description": "Endpoint para registrar usuario",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nombre": {
+                    "example": "any"
+                  },
+                  "nickname": {
+                    "example": "any"
+                  },
+                  "correo": {
+                    "example": "any"
+                  },
+                  "password": {
+                    "example": "any"
+                  },
+                  "fechaNacimiento": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/login": {
+      "post": {
+        "tags": [
+          "Usuario"
+        ],
+        "description": "Endpoint para realizar login",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "correo": {
+                    "example": "any"
+                  },
+                  "password": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/calificacion/calificarLista": {
+      "post": {
+        "tags": [
+          "Calificacion"
+        ],
+        "description": "Endpoint para calificar una pelicula.",
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "usuarioID": {
+                    "example": "any"
+                  },
+                  "listaPeliculaID": {
+                    "example": "any"
+                  },
+                  "calificacion": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/listaPelicula/": {
+      "post": {
+        "tags": [
+          "ListaPelicula"
+        ],
+        "description": "Endpoint para guardar las lista de una pelicula",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nombre": {
+                    "example": "any"
+                  },
+                  "usuarioID": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "ListaPelicula"
+        ],
+        "description": "Endpoint para obtener el listado de todas las lista de peliculas",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/listaPelicula/{id}": {
+      "get": {
+        "tags": [
+          "ListaPelicula"
+        ],
+        "description": "Endpoint para obtener la lista de peliculas de un usuario",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

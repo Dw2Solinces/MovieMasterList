@@ -6,6 +6,6 @@ const router = express.Router();
 
 router.use(authMiddleware);
 
-router.get("/calificarLista", calificarLista);
+router.post("/calificarLista", calificarLista);
 
 module.exports = router;

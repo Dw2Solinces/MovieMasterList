@@ -9,6 +9,13 @@ const schemaPelicula = Joi.object({
 });
 
 const getAllPeliculas = async (req, res) => {
+  /* 	#swagger.tags = ['Pelicula']
+    #swagger.description = 'Endpoint para obtener todas las peliculas' */
+
+  /* #swagger.security = [{
+            "bearerAuth": []
+    }] */
+
   try {
     const peliculaDB = await Pelicula.find();
 
@@ -20,6 +27,13 @@ const getAllPeliculas = async (req, res) => {
 };
 
 const createPelicula = async (req, res) => {
+  /* 	#swagger.tags = ['Pelicula']
+    #swagger.description = 'Endpoint para guardar pelicula' */
+
+  /* #swagger.security = [{
+            "bearerAuth": []
+    }] */
+
   // validate data
   const { error } = schemaPelicula.validate(req.body);
 
@@ -28,10 +42,27 @@ const createPelicula = async (req, res) => {
     return res.status(400).json({ error: error.details[0].message });
   }
 
+  const nombrePelicula = await Pelicula.findOne({
+    nombre: req.body.nombre,
+  });
+  if (nombrePelicula)
+    return res
+      .status(400)
+      .json({ error: "Ya existe una pelicula con ese nombre." });
+
+  const peliculass = await Pelicula.find({
+    listaID: req.body.listaID,
+  });
+
+  if (peliculass.length > 100)
+    return res
+      .status(400)
+      .json({ error: "Has superado el número máximo de peliculas." });
+
   // Se crea el objecto a guardar
   const peliculaSv = new Pelicula({
-    anio: req.body.nombre,
-    nombre: req.body.lanzamiento,
+    anio: req.body.anio,
+    nombre: req.body.nombre,
     url: req.body.url,
     listaID: req.body.listaID,
   });
@@ -51,6 +82,13 @@ const createPelicula = async (req, res) => {
 };
 
 const deletePelicula = async (req, res) => {
+  /* 	#swagger.tags = ['Pelicula']
+    #swagger.description = 'Endpoint para eliminar pelicula' */
+
+  /* #swagger.security = [{
+            "bearerAuth": []
+    }] */
+
   const id = req.params.id;
   console.log("id desde backend", id);
   try {

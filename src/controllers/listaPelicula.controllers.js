@@ -10,6 +10,13 @@ const schemaLista = Joi.object({
 });
 
 const guardarLista = async (req, res) => {
+  /* 	#swagger.tags = ['ListaPelicula']
+    #swagger.description = 'Endpoint para guardar las lista de una pelicula' */
+
+  /* #swagger.security = [{
+            "bearerAuth": []
+    }] */
+
   // validate data
   const { error } = schemaLista.validate(req.body);
 
@@ -17,6 +24,14 @@ const guardarLista = async (req, res) => {
   if (error) {
     return res.status(400).json({ error: error.details[0].message });
   }
+
+  const usarioLista = await ListaPelicula.findOne({
+    usuarioID: req.body.usuarioID,
+  });
+  if (usarioLista)
+    return res
+      .status(400)
+      .json({ error: "El usuario solo puede crear una lista" });
 
   // Se crea el objecto a guardar
   const listaSv = new ListaPelicula({
@@ -39,10 +54,34 @@ const guardarLista = async (req, res) => {
 };
 
 const getAllListaPelicula = async (req, res) => {
+  /* 	#swagger.tags = ['ListaPelicula']
+    #swagger.description = 'Endpoint para obtener el listado de todas las lista de peliculas' */
+
   try {
     const listaPeliculaDB = await ListaPelicula.find();
 
-    res.status(200).json(listaPeliculaDB);
+    const usersWithAverage = await Promise.all(
+      listaPeliculaDB.map(async (lista) => {
+        const calificaiones = await Calificacion.find({
+          usuarioID: lista.usuarioID,
+        });
+        const totalCalificaciones = calificaiones.length;
+        const sumOfCalificaciones = calificaiones.reduce(
+          (acc, calificacion) => acc + calificacion.calificacion,
+          0
+        );
+        const averageRating =
+          totalCalificaciones > 0
+            ? sumOfCalificaciones / totalCalificaciones
+            : 0;
+
+        lista.calificacionPromedio = averageRating;
+
+        return lista;
+      })
+    );
+
+    res.status(200).json(usersWithAverage);
   } catch (error) {
     console.log(error);
     throw error;
@@ -50,20 +89,25 @@ const getAllListaPelicula = async (req, res) => {
 };
 
 const listaPeliculaUsuario = async (req, res) => {
+  /* 	#swagger.tags = ['ListaPelicula']
+    #swagger.description = 'Endpoint para obtener la lista de peliculas de un usuario' */
+
   const id = req.params.id;
   try {
     const listaPeliculaDB = await ListaPelicula.findOne({ usuarioID: id });
 
-    const result = await Calificacion.aggregate([
-      { $match: { productId: productId } },
-      {
-        $group: {
-          calificacionPromedio: { $avg: "$calificacion" },
-        },
-      },
-    ]);
+    const calificaiones = await Calificacion.find({
+      usuarioID: listaPeliculaDB.usuarioID,
+    });
+    const totalCalificaciones = calificaiones.length;
+    const sumOfCalificaciones = calificaiones.reduce(
+      (acc, calificacion) => acc + calificacion.calificacion,
+      0
+    );
+    const averageRating =
+      totalCalificaciones > 0 ? sumOfCalificaciones / totalCalificaciones : 0;
 
-    console.log("El promedio es: " + result);
+    listaPeliculaDB.calificacionPromedio = averageRating;
 
     res.status(200).json({
       data: listaPeliculaDB,

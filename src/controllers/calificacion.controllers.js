@@ -9,6 +9,13 @@ const schemaCalificaicion = Joi.object({
 });
 
 const calificarLista = async (req, res) => {
+  /* 	#swagger.tags = ['Calificacion']
+    #swagger.description = 'Endpoint para calificar una pelicula.' */
+
+  /* #swagger.security = [{
+            "bearerAuth": []
+    }] */
+
   // validate data
   const { error } = schemaCalificaicion.validate(req.body);
 
@@ -19,9 +26,9 @@ const calificarLista = async (req, res) => {
 
   // Se crea el objecto a guardar
   const calificacionSv = new Calificacion({
-    usuarioID: req.body.nombre,
-    listaPeliculaID: req.body.lanzamiento,
-    calificacion: req.body.url,
+    usuarioID: req.body.usuarioID,
+    listaPeliculaID: req.body.listaPeliculaID,
+    calificacion: req.body.calificacion,
   });
 
   try {
@@ -38,4 +45,4 @@ const calificarLista = async (req, res) => {
   }
 };
 
-module.exports = {calificarLista};
+module.exports = { calificarLista };
