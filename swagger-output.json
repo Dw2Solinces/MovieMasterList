@@ -220,8 +220,8 @@
         ],
         "description": "Endpoint para calificar una pelicula.",
         "responses": {
-          "201": {
-            "description": "Created"
+          "200": {
+            "description": "OK"
           },
           "400": {
             "description": "Bad Request"
@@ -241,9 +241,6 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "usuarioID": {
-                    "example": "any"
-                  },
                   "listaPeliculaID": {
                     "example": "any"
                   },

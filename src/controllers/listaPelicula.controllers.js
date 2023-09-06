@@ -65,26 +65,14 @@ const getAllListaPelicula = async (req, res) => {
 
     const usersWithAverage = await Promise.all(
       listaPeliculaDB.map(async (lista) => {
-        const calificaiones = await Calificacion.find({
-          usuarioID: lista.usuarioID,
-        });
-        const totalCalificaciones = calificaiones.length;
-        const sumOfCalificaciones = calificaiones.reduce(
-          (acc, calificacion) => acc + calificacion.calificacion,
-          0
-        );
-        const averageRating =
-          totalCalificaciones > 0
-            ? sumOfCalificaciones / totalCalificaciones
-            : 0;
-
+        
         const user = await Usuario.findOne({ _id: lista.usuarioID });
 
         const dataLista = new ListaPeliculaAllDTO({
           id: lista.id,
           nombre: lista.nombre,
           nickname: user.nickname,
-          calificacion: averageRating,
+          calificacion: lista.calificacionPromedio,
         });
 
         return dataLista;
@@ -106,19 +94,6 @@ const listaPeliculaUsuario = async (req, res) => {
   try {
     const listaPeliculaDB = await ListaPelicula.findOne({ _id: id });
 
-    const calificaiones = await Calificacion.find({
-      usuarioID: listaPeliculaDB.usuarioID,
-    });
-    const totalCalificaciones = calificaiones.length;
-    const sumOfCalificaciones = calificaiones.reduce(
-      (acc, calificacion) => acc + calificacion.calificacion,
-      0
-    );
-    const averageRating =
-      totalCalificaciones > 0 ? sumOfCalificaciones / totalCalificaciones : 0;
-
-    listaPeliculaDB.calificacionPromedio = averageRating;
-
     const user = await Usuario.findOne({ _id: listaPeliculaDB.usuarioID });
 
     const peliculas = await Pelicula.find({ listaID: id });
@@ -129,7 +104,7 @@ const listaPeliculaUsuario = async (req, res) => {
       id: listaPeliculaDB.id,
       nombre: listaPeliculaDB.nombre,
       nickname: user.nickname,
-      calificacion: averageRating,
+      calificacion: listaPeliculaDB.calificacionPromedio,
       peliculas: peliculas
     });
 
